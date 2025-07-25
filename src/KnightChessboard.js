@@ -3,31 +3,28 @@ import { getKnightMoves } from "./knight";
 import "./KnightChessboard.css";
 
 const KnightChessboard = () => {
-  const [selected, setSelected] = useState(null);
+  const [hovered, setHovered] = useState(null);
 
-  const handleCellClick = (row, col) => {
-    setSelected([row, col]);
-  };
-
-  const knightMoves = selected ? getKnightMoves(...selected) : [];
+  const knightMoves = hovered ? getKnightMoves(...hovered) : [];
 
   return (
     <div className="chessboard-grid">
       {Array.from({ length: 8 }).map((_, row) =>
         Array.from({ length: 8 }).map((_, col) => {
           const isLight = (row + col) % 2 === 0;
-          const isSelected = selected && selected[0] === row && selected[1] === col;
+          const isHovered = hovered && hovered[0] === row && hovered[1] === col;
           const isMove = knightMoves.some(([r, c]) => r === row && c === col);
 
           return (
             <div
               key={`${row}-${col}`}
               className={`cell ${isLight ? "light-square" : "dark-square"} 
-                          ${isSelected ? "selected-square" : ""} 
+                          ${isHovered ? "selected-square" : ""} 
                           ${isMove ? "knight-move-target" : ""}`}
-              onClick={() => handleCellClick(row, col)}
+              onMouseEnter={() => setHovered([row, col])}
+              onMouseLeave={() => setHovered(null)}
             >
-              {isSelected ? "♞" : ""}
+              {isHovered ? "♞" : ""}
             </div>
           );
         })
